@@ -1,0 +1,28 @@
+{
+  "name": "akyos/ux-filters",
+  "type": "library",
+  "description": "A Symfony bundle to manage filters in live Component",
+  "keywords": ["workflow", "symfony", "PHP", "attribute"],
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Johan JOULKVA",
+      "email": "johan.akyos@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "symfony/form": "^7.1",
+    "symfony/doctrine-bridge": "^7.1",
+    "symfony/translation": "^7.1",
+    "symfony/orm-pack": "^2.4",
+    "symfony/ux-live-component": "^2.21"
+  },
+  "autoload": {
+    "psr-4": { "Akyos\\UXFilters\\": "" },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  }
+}
