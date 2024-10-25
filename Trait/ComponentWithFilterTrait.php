@@ -1,6 +1,6 @@
 <?php
 
-namespace Trait\Trait;
+namespace Akyos\UXFilters\Trait;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
