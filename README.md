@@ -4,6 +4,8 @@ A Symfony bundle to manage filters in live Component
 Sample:
 
 # Php file
+
+```php
 <?php
 
 namespace App\Twig\Components\Product;
@@ -37,8 +39,10 @@ final class Index extends AbstractController
         ]);
     }
 }
+```
 
 # Template
+```html
 <div{{ attributes }}>
     {{ form(formFilters) }}
     {% for product in elements %}
@@ -52,3 +56,4 @@ final class Index extends AbstractController
     {% endfor %}
     {{ pagination|raw }}
 </div>
+```
