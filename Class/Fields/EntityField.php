@@ -14,7 +14,6 @@ class EntityField extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'autocomplete' => true,
         ]);
     }
 
