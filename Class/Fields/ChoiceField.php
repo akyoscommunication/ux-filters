@@ -14,7 +14,6 @@ class ChoiceField extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'autocomplete' => true,
             'empty_data'  => null,
         ]);
     }
