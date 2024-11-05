@@ -8,7 +8,7 @@ class Filter
 {
 	public string $name;
 	public string $label;
-	public string $placeholder;
+	public string|bool|null $placeholder;
 
 	public ?string $transDomain = null;
 	public ?string $placeholderTransDomain = null;
@@ -23,11 +23,11 @@ class Filter
 
 	public string $classCSS = '';
 
-	public function __construct(string $name, ?string $label = null, ?string $placeholder = null)
+	public function __construct(string $name, ?string $label = null, string|bool|null $placeholder = null)
 	{
 		$this->name = $name;
 		$this->label = $label;
-		$this->placeholder = $placeholder ?: $name;
+		$this->placeholder = ($placeholder === false ? false : ($placeholder ?: $name));
 	}
 
 
@@ -75,13 +75,13 @@ class Filter
 		return $this->type;
 	}
 
-	public function setPlaceholder(string $placeholder): Filter
+	public function setPlaceholder(string|bool|null $placeholder): Filter
 	{
 		$this->placeholder = $placeholder;
 		return $this;
 	}
 
-	public function getPlaceholder(): string
+	public function getPlaceholder(): string|bool|null
 	{
 		return $this->placeholder;
 	}
@@ -104,7 +104,7 @@ class Filter
             'label' => $this->getLabel() ? ($this->getTransDomain() ? (new TranslatableMessage($this->getLabel(), [], $this->getTransDomain())) : $this->getLabel()) : false,
             'required' => false,
             'attr' => [
-                'placeholder' => $this->getPlaceholderTransDomain() ? (new TranslatableMessage($this->getPlaceholder(), [], $this->getPlaceholderTransDomain())) : (
+                'placeholder' => $this->getPlaceholderTransDomain() && $this->getPlaceholder() ? (new TranslatableMessage($this->getPlaceholder(), [], $this->getPlaceholderTransDomain())) : (
                 $this->getTransDomain() ? (new TranslatableMessage($this->getPlaceholder(), [], $this->getTransDomain())) : $this->getPlaceholder()
                 ),
                 'data-action' => 'live#action',
@@ -191,5 +191,4 @@ class Filter
     {
         return $this->defaultValue;
     }
-
 }

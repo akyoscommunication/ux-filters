@@ -11,7 +11,9 @@ class Choices extends Filter
 
     public bool $multiple = false;
 
-    public function __construct(string $name, ?string $label = null, ?string $placeholder = null)
+    public bool $expanded = false;
+
+    public function __construct(string $name, ?string $label = null, string|bool|null $placeholder = null)
     {
         parent::__construct($name, $label, $placeholder);
         $this->type = ChoiceField::class;
@@ -20,6 +22,12 @@ class Choices extends Filter
     public function getChoices(): array
     {
         return $this->choices;
+    }
+
+    public function expanded(bool $expanded = true): self
+    {
+        $this->expanded = $expanded;
+        return $this;
     }
 
     public function setChoices(array $choices): self
@@ -43,9 +51,13 @@ class Choices extends Filter
     public function getOptions(): array
     {
         return $this->options = array_merge($this->options, [
+            'expanded' => $this->expanded,
             'choices' => $this->getChoices(),
-            'placeholder' => $this->getPlaceholderTransDomain() ? new TranslatableMessage($this->getPlaceholder(), [], $this->getPlaceholderTransDomain()) : $this->getPlaceholder(),
+            'placeholder' => $this->getPlaceholderTransDomain() && $this->getPlaceholder() !== false ? new TranslatableMessage($this->getPlaceholder(), [], $this->getPlaceholderTransDomain()) : $this->getPlaceholder(),
             'multiple' => $this->isMultiple(),
+            'choice_attr' => function (mixed $value): array {
+                return ['data-model' => 'valuesFilters.' . $this->getName()];
+            },
         ]);
     }
 }
