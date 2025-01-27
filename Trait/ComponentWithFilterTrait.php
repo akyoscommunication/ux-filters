@@ -71,7 +71,10 @@ trait ComponentWithFilterTrait
     public function initValues(): void
     {
         foreach ($this->getFilters() as $filter) {
-            $this->valuesFilters[$filter->getName()] = $this->requestFilter->getCurrentRequest()->query->get($filter->getName()) ?? $filter->getDefaultValue();
+            if(!isset($this->valuesFilters[$filter->getName()])){
+                $this->valuesFilters[$filter->getName()] = $filter->getDefaultValue();
+            }
+            $this->values[$filter->getName()] = $this->requestFilter->getCurrentRequest()->query->get($filter->getName());
         }
     }
 
