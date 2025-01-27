@@ -36,7 +36,7 @@ trait ComponentWithFilterTrait
     public RequestStack $requestFilter;
 
 
-    #[LiveProp(writable: true)]
+    #[LiveProp(writable: true, url: true)]
     public array $valuesFilters = [];
 
     /**
