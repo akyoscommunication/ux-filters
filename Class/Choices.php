@@ -50,14 +50,19 @@ class Choices extends Filter
 
     public function getOptions(): array
     {
-        return $this->options = array_merge($this->options, [
+        $options = [
             'expanded' => $this->expanded,
             'choices' => $this->getChoices(),
             'placeholder' => $this->getPlaceholderTransDomain() && $this->getPlaceholder() !== false ? new TranslatableMessage($this->getPlaceholder(), [], $this->getPlaceholderTransDomain()) : $this->getPlaceholder(),
             'multiple' => $this->isMultiple(),
-            'choice_attr' => function (mixed $value): array {
+        ];
+
+        if ($this->expanded) {
+            $options['choice_attr'] = function (mixed $value): array {
                 return ['data-model' => 'valuesFilters.' . $this->getName()];
-            },
-        ]);
+            };
+        }
+
+        return $this->options = array_merge($this->options, $options);
     }
 }

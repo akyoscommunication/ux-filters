@@ -158,9 +158,11 @@ trait ComponentWithFilterTrait
                         $builder->setParameter($filter->getName(), $value);
                     }
                 }
-                $builder->andWhere(
-                    $builder->expr()->orX(...$queryParam)
-                );
+                if (!empty($queryParam)) {
+                    $builder->andWhere(
+                        $builder->expr()->orX(...$queryParam)
+                    );
+                }
             }
         }
 
