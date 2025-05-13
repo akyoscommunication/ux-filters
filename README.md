@@ -1,9 +1,34 @@
 # UX Filters Bundle
-A Symfony bundle to manage filters in live Component
 
-Sample:
+Un bundle Symfony pour gérer facilement les filtres dans vos composants Live.
 
-# Php file
+## Installation
+
+```bash
+composer require akyos/ux-filters
+```
+
+## Documentation
+
+La documentation complète est disponible dans le dossier `docs/` :
+
+- [Guide d'installation](docs/installation.md)
+- [Types de filtres disponibles](docs/filters.md)
+- [Configuration](docs/configuration.md)
+- [Exemples d'utilisation](docs/examples.md)
+- [API Reference](docs/api.md)
+
+## Fonctionnalités principales
+
+- Filtres de texte avec recherche LIKE
+- Filtres de sélection (Choices)
+- Filtres de date
+- Filtres d'entités
+- Filtres d'énumération
+- Intégration avec la pagination
+- Support des composants Live de Symfony
+
+## Exemple rapide
 
 ```php
 <?php
@@ -40,6 +65,10 @@ final class Index extends AbstractController
     }
 }
 ```
+
+## Licence
+
+Ce bundle est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 # Template
 ```html
