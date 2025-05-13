@@ -71,10 +71,9 @@ trait ComponentWithFilterTrait
     public function initValues(): void
     {
         foreach ($this->getFilters() as $filter) {
-            if(!isset($this->valuesFilters[$filter->getName()])){
+            if (!isset($this->valuesFilters[$filter->getName()])) {
                 $this->valuesFilters[$filter->getName()] = $filter->getDefaultValue();
             }
-            $this->values[$filter->getName()] = $this->requestFilter->getCurrentRequest()->query->get($filter->getName());
         }
     }
 
@@ -147,20 +146,41 @@ trait ComponentWithFilterTrait
             if ($this->valuesFilters[$filter->getName()] === null || $this->valuesFilters[$filter->getName()] === '' || empty($this->valuesFilters[$filter->getName()])) {
                 $value = $filter->getDefaultValue();
             }
+
             if ($value !== '' && !empty($value)) {
-                foreach ($filter->getParams() as $param) {
-                    if ($param instanceof \Closure) {
-                        $queryParam[] = $param($builder, $value);
-                    } else {
-                        if ($filter->getSearchType() === 'like')
-                            $value = '%' . $value . '%';
-                        $queryParam[] = $builder->expr()->{$filter->getSearchType()}($param, ':' . $filter->getName());
-                        $builder->setParameter($filter->getName(), $value);
+                if (method_exists($filter, 'getMultipleWord') && $filter->getMultipleWord() !== null) {
+                    $value = explode(' ', $value);
+                }
+                if(!is_array($value)) {
+                    $value = [$value];
+                }
+                foreach ($value as $key => $v) {
+                    foreach ($filter->getParams() as $param) {
+                        if ($param instanceof \Closure) {
+                            $queryParam[$key][] = $param($builder, $v);
+                        } else {
+                            $filterName = $filter->getName() . '_' . $key;
+                            if ($filter->getSearchType() === 'like') {
+                                $v = '%' . $v . '%';
+                            }
+                            $queryParam[$key][] = $builder->expr()->{$filter->getSearchType()}($param, ':' . $filterName);
+                            $builder->setParameter($filterName, $v);
+                        }
                     }
                 }
-                $builder->andWhere(
-                    $builder->expr()->orX(...$queryParam)
-                );
+                if (method_exists($filter, 'getMultipleWord') && $filter->getMultipleWord() === 'and') {
+                    foreach ($queryParam as $param) {
+                        $builder->andWhere(
+                            $builder->expr()->orX(...$param)
+                        );
+                    }
+                } else {
+                    foreach ($queryParam as $param) {
+                        $builder->orWhere(
+                            $builder->expr()->orX(...$param)
+                        );
+                    }
+                }
             }
         }
 
