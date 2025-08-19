@@ -71,9 +71,10 @@ trait ComponentWithFilterTrait
     public function initValues(): void
     {
         foreach ($this->getFilters() as $filter) {
-            if (!isset($this->valuesFilters[$filter->getName()])) {
+            if(!isset($this->valuesFilters[$filter->getName()])){
                 $this->valuesFilters[$filter->getName()] = $filter->getDefaultValue();
             }
+            $this->values[$filter->getName()] = $this->requestFilter->getCurrentRequest()->query->get($filter->getName());
         }
     }
 
@@ -160,11 +161,17 @@ trait ComponentWithFilterTrait
                             $queryParam[$key][] = $param($builder, $v);
                         } else {
                             $filterName = $filter->getName() . '_' . $key;
-                            if ($filter->getSearchType() === 'like') {
+                            if ($filter->getSearchType() === 'member') {
+                                $queryParam[$key][] = $builder->expr()->isMemberOf(':' . $filterName, $param);
+                                $builder->setParameter($filterName, $v);
+                            } elseif ($filter->getSearchType() === 'like') {
                                 $v = '%' . $v . '%';
+                                $queryParam[$key][] = $builder->expr()->{$filter->getSearchType()}($param, ':' . $filterName);
+                                $builder->setParameter($filterName, $v);
+                            } else {
+                                $queryParam[$key][] = $builder->expr()->{$filter->getSearchType()}($param, ':' . $filterName);
+                                $builder->setParameter($filterName, $v);
                             }
-                            $queryParam[$key][] = $builder->expr()->{$filter->getSearchType()}($param, ':' . $filterName);
-                            $builder->setParameter($filterName, $v);
                         }
                     }
                 }
@@ -176,7 +183,7 @@ trait ComponentWithFilterTrait
                     }
                 } else {
                     foreach ($queryParam as $param) {
-                        $builder->orWhere(
+                        $builder->andWhere(
                             $builder->expr()->orX(...$param)
                         );
                     }
