@@ -158,7 +158,9 @@ trait ComponentWithFilterTrait
                 foreach ($value as $key => $v) {
                     foreach ($filter->getParams() as $param) {
                         if ($param instanceof \Closure) {
-                            $queryParam[$key][] = $param($builder, $v);
+                           if ($result = $param($builder, $value)) {
+                                $queryParam[] = $result;
+                            }
                         } else {
                             $filterName = $filter->getName() . '_' . $key;
                             if ($filter->getSearchType() === 'member') {
