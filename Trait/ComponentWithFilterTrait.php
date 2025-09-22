@@ -158,8 +158,8 @@ trait ComponentWithFilterTrait
                 foreach ($value as $key => $v) {
                     foreach ($filter->getParams() as $param) {
                         if ($param instanceof \Closure) {
-                           if ($result = $param($builder, $value)) {
-                                $queryParam[] = $result;
+                           if ($result = $param($builder, $v)) {
+                                $queryParam[$key][] = $result;
                             }
                         } else {
                             $filterName = $filter->getName() . '_' . $key;
@@ -167,7 +167,10 @@ trait ComponentWithFilterTrait
                                 $queryParam[$key][] = $builder->expr()->isMemberOf(':' . $filterName, $param);
                                 $builder->setParameter($filterName, $v);
                             } elseif ($filter->getSearchType() === 'like') {
-                                $v = '%' . $v . '%';
+                                $pattern = '/^%.*%$/';
+                                if (!preg_match($pattern, $v)) {
+                                    $v = '%' . $v . '%';
+                                }
                                 $queryParam[$key][] = $builder->expr()->{$filter->getSearchType()}($param, ':' . $filterName);
                                 $builder->setParameter($filterName, $v);
                             } else {
@@ -192,7 +195,6 @@ trait ComponentWithFilterTrait
                 }
             }
         }
-
         return $builder;
     }
 
