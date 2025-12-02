@@ -87,7 +87,7 @@ trait ComponentWithFilterTrait
     public function updateFilters(): void
     {
         $this->emit('filtersUpdated');
-        $this->emit('updatedValues', $this->valuesFilters);
+        $this->emit('updatedValues', ['filters' => $this->valuesFilters]);
     }
 
     public function getFormFilters(): FormView
