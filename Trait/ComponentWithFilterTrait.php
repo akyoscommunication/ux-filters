@@ -259,6 +259,11 @@ trait ComponentWithFilterTrait
 
     private function like($item, $param, $value): bool
     {
+        return str_contains(strtolower($this->getValue($item, $param)), strtolower($value));
+    }
+
+    private function exactLike($item, $param, $value): bool
+    {
         return str_contains($this->getValue($item, $param), $value);
     }
 
