@@ -4,6 +4,7 @@
   "description": "A Symfony bundle to manage filters in live Component",
   "keywords": ["workflow", "symfony", "PHP", "attribute"],
   "minimum-stability": "stable",
+  "version": "2.0",
   "license": "proprietary",
   "authors": [
     {

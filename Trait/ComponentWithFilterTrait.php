@@ -23,6 +23,8 @@ trait ComponentWithFilterTrait
     #[ExposeInTemplate(name: 'formFilters', getter: 'getFormFilters')]
     private ?string $formFilters = null;
 
+    public ?string $filteredCountSuffix = null;
+
     private ?array $filters = null;
 
     public ?string $repository = null;
@@ -265,6 +267,40 @@ trait ComponentWithFilterTrait
     private function exactLike($item, $param, $value): bool
     {
         return str_contains($this->getValue($item, $param), $value);
+    }
+
+    public function getFilteredCount(): int
+    {
+        if (method_exists($this, 'getElements') && $this->getElements() instanceof \Knp\Component\Pager\Pagination\PaginationInterface) {
+            return $this->getElements()->getTotalItemCount();
+        }
+        return $this->computeCountFromData();
+    }
+
+    #[ExposeInTemplate]
+    public function getFilteredCountString(): ?string
+    {
+        if ($this->filteredCountSuffix === null) {
+            return null;
+        }
+        return $this->getFilteredCount() . $this->filteredCountSuffix;
+    }
+
+    private function computeCountFromData(): int
+    {
+        $data = $this->getData();
+        if ($data instanceof QueryBuilder) {
+            $qb = clone $data;
+            $alias = $qb->getRootAliases()[0] ?? 'entity';
+            $qb->select($qb->expr()->count($alias))
+                ->setMaxResults(null)
+                ->setFirstResult(null);
+            return (int) $qb->getQuery()->getSingleScalarResult();
+        }
+        if (is_array($data)) {
+            return count($data);
+        }
+        return 0;
     }
 
     protected function getDefaultTransDomain(): string

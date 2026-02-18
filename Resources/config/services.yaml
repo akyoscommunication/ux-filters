@@ -1,5 +1,5 @@
 services:
-  Akyos\UXFilters:
+  Akyos\UXFilters\:
     resource: '../../*'
     exclude: '../../{DependencyInjection,Entity,Tests,Kernel.php}'
     autowire: true
