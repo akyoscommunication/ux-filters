@@ -17,8 +17,8 @@
     "symfony/form": "*",
     "symfony/doctrine-bridge": "*",
     "symfony/translation": "*",
-    "symfony/orm-pack": "^2.4",
-    "symfony/ux-live-component": "^2.21"
+    "symfony/orm-pack": "*",
+    "symfony/ux-live-component": "*"
   },
   "autoload": {
     "psr-4": { "Akyos\\UXFilters\\": "" },
